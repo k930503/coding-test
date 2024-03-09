@@ -62,7 +62,7 @@ vector<int> solution(vector<vector<int>> edges)
 
     memset(gives, 0, sizeof(int) * pointCnt);
     memset(receives, 0, sizeof(int) * pointCnt);
-    
+
     fillCounts(edges, gives, receives);
 
     int genesis = searchGenesis(edges, gives, receives, pointCnt);
