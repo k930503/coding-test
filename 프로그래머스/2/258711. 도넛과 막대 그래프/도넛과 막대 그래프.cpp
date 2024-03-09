@@ -1,92 +1,58 @@
-#include <iostream>
 #include <string>
 #include <vector>
-#include <cstring>
-
+#include <map>
+#include <stack>
+#include <set>
 using namespace std;
 
-void fillCounts(vector<vector<int>> edges, int *gives, int *receives)
-{
-    for (int i = 0; i < edges.size(); i++)
-    {
-        gives[edges[i][0] - 1]++;
-        receives[edges[i][1] - 1]++;
-    }
-}
+map<int, vector<int>> graph;
+map<int, int> arrive_check;
+set<int> explored;
+stack<int> frontier;
+int new_vertex;
 
-void reduceCounts(vector<vector<int>> edges, int* receives, int genesis) {
-    for (int i = 0; i < edges.size(); i++) {
-        if (edges[i][0] == genesis) {
-            receives[edges[i][1] - 1]--;
+
+void dfs(vector<int>& answer){
+    for(const auto& next_frontier:graph[new_vertex]){
+        frontier.push(next_frontier);    
+    }
+
+    while(!frontier.empty()){
+        int now=frontier.top();
+        frontier.pop();
+        explored.insert(now);
+
+        if(graph.find(now)==graph.end()){
+            answer[2]+=1;
+        }
+        else if(graph[now].size()==2){
+            answer[3]+=1;
+        }
+        else if(graph[now].size()==1){
+            if(explored.find(graph[now][0])!=explored.end()) answer[1]+=1;
+            else frontier.push(graph[now][0]);
         }
     }
 }
 
-int searchBiggestNum(vector<vector<int>> edges)
-{
-    int biggestNum = 0;
-    for (int i = 0; i < edges.size(); i++)
-    {
-        if (edges[i][0] > biggestNum)
-        {
-            biggestNum = edges[i][0];
-        }
+vector<int> solution(vector<vector<int>> edges) {
 
-        if (edges[i][1] > biggestNum)
-        {
-            biggestNum = edges[i][1];
-        }
+    for(int i=0;i<edges.size();i++){
+        graph[edges[i][0]].push_back(edges[i][1]);
+        arrive_check[edges[i][1]] = 1;
     }
-    return biggestNum;
-}
 
-int searchGenesis(vector<vector<int>> edges, int* gives, int* receives, int pointCnt) {
-    int genesis = 0;
-    for (int i = 0; i < pointCnt; i++)
-    {
-        if (receives[i] == 0 && gives[i] > 1)
-        {
-            genesis = i + 1;
-            break;
-        }
+    for(const auto& element : graph){
+        if(arrive_check.find(element.first)==arrive_check.end()&&element.second.size()>=2) {new_vertex = element.first; break;}
     }
-    return genesis;
-}
 
-vector<int> solution(vector<vector<int>> edges)
-{
     vector<int> answer;
-    int pointCnt = searchBiggestNum(edges);
-    int *gives = new int[pointCnt];
-    int *receives = new int[pointCnt];
 
-    memset(gives, 0, sizeof(int) * pointCnt);
-    memset(receives, 0, sizeof(int) * pointCnt);
+    answer.push_back(0); answer.push_back(0); answer.push_back(0); answer.push_back(0);
 
-    fillCounts(edges, gives, receives);
+    answer[0] = new_vertex;
 
-    int genesis = searchGenesis(edges, gives, receives, pointCnt);
-    reduceCounts(edges, receives, genesis);
-
-    int donutCnt = 0;
-    int stickCnt = 0;
-    int eightCnt = 0;
-
-    for (int i = 0; i < pointCnt; i++)
-    {
-        if (gives[i] == 0)
-        {
-            stickCnt++;
-        }
-        else if (receives[i] == 2)
-        {
-            eightCnt++;
-        }
-    }
-
-    int graphCnt = gives[genesis - 1];
-    donutCnt = graphCnt - (stickCnt + eightCnt);
-    answer = {genesis, donutCnt, stickCnt, eightCnt};
+    dfs(answer);
 
     return answer;
 }
