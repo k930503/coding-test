@@ -1,42 +1,92 @@
+#include <iostream>
 #include <string>
 #include <vector>
-#include <algorithm>
+#include <cstring>
+
 using namespace std;
 
-#define N 1000001
-int indegree[N], outdegree[N];
-vector<int> adj[N];
-bool visit[N];
-void dfs(int now, int &v, int &e){
-    visit[now] = true;
-    v++;
-    for (int next : adj[now]){
-        e++;
-        if (!visit[next])
-            dfs(next, v, e);
+void fillCounts(vector<vector<int>> edges, int *gives, int *receives)
+{
+    for (int i = 0; i < edges.size(); i++)
+    {
+        gives[edges[i][0] - 1]++;
+        receives[edges[i][1] - 1]++;
     }
 }
-vector<int> solution(vector<vector<int>> edges) {
-    vector<int> answer = { 0, 0, 0, 0 };
-    int n = 0, m = edges.size();
-    for (int i = 0; i < m; i++){
-        int x = edges[i][0], y = edges[i][1];
-        indegree[y]++, outdegree[x]++;
-        adj[x].push_back(y);
-        n = max({ n, x, y });
-    }
-    int temp = 0, maximum = 0;
-    for (int i = 1; i <= n; i++)
-    if (!indegree[i] && outdegree[i] > maximum)
-        maximum = outdegree[i], temp = i;
-    answer[0] = temp;
 
-    for (auto x : adj[answer[0]]) if (!visit[x]) {
-        int v = 0, e = 0;
-        dfs(x, v, e);
-        if (v == e) answer[1]++;
-        else if (v - 1 == e) answer[2]++;
-        else answer[3]++;
+void reduceCounts(vector<vector<int>> edges, int* receives, int genesis) {
+    for (int i = 0; i < edges.size(); i++) {
+        if (edges[i][0] == genesis) {
+            receives[edges[i][1] - 1]--;
+        }
     }
+}
+
+int searchBiggestNum(vector<vector<int>> edges)
+{
+    int biggestNum = 0;
+    for (int i = 0; i < edges.size(); i++)
+    {
+        if (edges[i][0] > biggestNum)
+        {
+            biggestNum = edges[i][0];
+        }
+
+        if (edges[i][1] > biggestNum)
+        {
+            biggestNum = edges[i][1];
+        }
+    }
+    return biggestNum;
+}
+
+int searchGenesis(vector<vector<int>> edges, int* gives, int* receives, int pointCnt) {
+    int genesis = 0;
+    for (int i = 0; i < pointCnt; i++)
+    {
+        if (receives[i] == 0 && gives[i] > 1)
+        {
+            genesis = i + 1;
+            break;
+        }
+    }
+    return genesis;
+}
+
+vector<int> solution(vector<vector<int>> edges)
+{
+    vector<int> answer;
+    int pointCnt = searchBiggestNum(edges);
+    int *gives = new int[pointCnt];
+    int *receives = new int[pointCnt];
+
+    memset(gives, 0, sizeof(int) * pointCnt);
+    memset(receives, 0, sizeof(int) * pointCnt);
+
+    fillCounts(edges, gives, receives);
+
+    int genesis = searchGenesis(edges, gives, receives, pointCnt);
+    reduceCounts(edges, receives, genesis);
+
+    int donutCnt = 0;
+    int stickCnt = 0;
+    int eightCnt = 0;
+
+    for (int i = 0; i < pointCnt; i++)
+    {
+        if (gives[i] == 0)
+        {
+            stickCnt++;
+        }
+        else if (receives[i] == 2)
+        {
+            eightCnt++;
+        }
+    }
+
+    int graphCnt = gives[genesis - 1];
+    donutCnt = graphCnt - (stickCnt + eightCnt);
+    answer = {genesis, donutCnt, stickCnt, eightCnt};
+
     return answer;
 }
