@@ -9,7 +9,7 @@ int main() {
     cout.tie(nullptr);
 
     int N, M;
-    long sum[1000001] = {0,};
+    long sum = 0;
     long mod[1000] = {0,};
     long count = 0;
 
@@ -18,8 +18,8 @@ int main() {
     for (int i = 1; i <= N; i++) {
         int num;
         cin >> num;
-        sum[i] = sum[i - 1] + num;
-        int temp = sum[i] % M;
+        sum = sum + num;
+        int temp = sum % M;
         if (temp == 0) {
             count++;
         }
