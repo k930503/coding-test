@@ -4,29 +4,40 @@
 
 using namespace std;
 
-int N,M;
-vector<int> v;
-
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+
+    int cnt = 0;
+
+    int N, M;
     cin >> N >> M;
 
-    for(int i=0;i<N;i++) {
-        int x;
-        cin >> x;
-        v.push_back(x);
+    vector<int> v(N + 1, 0);
+    int start, end;
+    for (int i = 1; i <= N; i++) {
+        cin >> v[i];
     }
+    sort(v.begin(), v.end());
+    start = 1;
+    end = N;
 
-    int start=0, end=1, cnt=0;
-    sort(v.begin(),v.end());
+//    if (N == 1 || M == 1 || v[end] + v[end - 1] < M) {
+//        return cnt;
+//    }
 
-    while(start<=end && end<N) {
-        if(v[start] + v[end] == M) cnt++;
-
-        if(end==N-1) {
+    while (start < end) {
+        if (M > v[start] + v[end]) {
             start++;
-            end=start+1;
-        } else end++;
+        } else if (M < v[start] + v[end]) {
+            end--;
+        } else {
+            cnt++;
+            end--;
+            start++;
+        }
     }
-
     cout << cnt;
+    return 0;
 }
