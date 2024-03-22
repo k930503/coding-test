@@ -18,7 +18,7 @@ int main() {
         cin >> now;
         // 값이 들어올 때마다 정렬하지 않고
         // 현재 수보다 큰 값을 덱에서 제거하여 시간 복잡도를 줄임
-        while (deque.size() && deque.back().first > now) {
+        while (!deque.empty() && deque.back().first > now) {
             deque.pop_back();
         }
         deque.push_back(Node(now, i));
