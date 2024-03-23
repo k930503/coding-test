@@ -1,51 +1,52 @@
 #include <iostream>
-#include <stack>
 #include <vector>
+#include <stack>
+
 using namespace std;
 
-stack<int> sequence;
-vector<char> ans;
-int n;
-int cur_num;
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
 
+    int N;
+    cin >> N;
+    vector<int> A(N, 0);
+    vector<char> resultV;
+    for (int i = 0; i < N; i++) {
+        cin >> A[i];
+    }
+    stack<int> mystack;
+    int num = 1;
+    bool result = true;
+    for (int i = 0; i < A.size(); i++) {
+        int su = A[i];
+        if (su >= num) {
+            while (su >= num) {
+                mystack.push(num++);
+                resultV.push_back('+');
+            }
+            mystack.pop();
+            resultV.push_back('-');
+        }
+        else {
+            int n = mystack.top();
+            mystack.pop();
 
-int main(void) {
-	ios::sync_with_stdio(0);
-	cin.tie(0);
-	
-	sequence.push(cur_num);
-	cur_num++;
-
-	int num;
-	bool valid = true;
-
-	cin >> n;
-	
-
-	for (int i = 0; i < n; i++) {
-		cin >> num;
-		// stack 의 top이 num과 같아질때까지 반복
-		while (sequence.top() < num) {
-			sequence.push(cur_num);
-			cur_num++;
-			ans.push_back('+');
-		}
-		if (sequence.top() == num) {
-			sequence.pop();
-			ans.push_back('-');
-		}
-		else {
-			valid = false;
-		}
-	}
-	
-	if (!valid) {
-		cout << "NO" << '\n';
-	}
-	else {
-		for (auto ch : ans) {
-			cout << ch << '\n';
-		}
-	}
-
+            if (n > su) {
+                cout << "NO";
+                result = false;
+                break;
+            }
+            else {
+                resultV.push_back('-');
+            }
+        }
+    }
+    if (result) {
+        for (int i = 0; i < resultV.size(); i++)
+        {
+            cout << resultV[i] << '\n';
+        }
+    }
 }
