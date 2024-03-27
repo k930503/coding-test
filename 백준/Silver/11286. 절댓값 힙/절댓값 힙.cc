@@ -3,18 +3,18 @@
 
 using namespace std;
 
-int main() {
-
-    struct compare {
-        bool operator()(int a, int b) {
-            int absA = abs(a);
-            int absB = abs(b);
-            if (absA == absB) {
-                return a > b;
-            }
-            return absA > absB;
+struct compare {
+    bool operator()(int a, int b) {
+        int absA = abs(a);
+        int absB = abs(b);
+        if (absA == absB) {
+            return a > b;
         }
-    };
+        return absA > absB;
+    }
+};
+
+int main() {
 
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
