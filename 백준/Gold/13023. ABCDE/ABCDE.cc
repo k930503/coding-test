@@ -5,33 +5,33 @@ using namespace std;
 
 vector<vector<int>> v;
 vector<int> visited;
+bool found = false;
 int depth = 0;
 
-bool dfs(int num) {
+void dfs(int num) {
+    if (found) {
+        return;
+    }
     depth++;
     if (visited[num]) {
         depth--;
-        return false;
     }
 
     if (depth == 5) {
-        return true;
+        found = true;
+        return;
     }
 
     visited[num] = true;
 
     for (int i = 0; i < v[num].size(); i++) {
         int adjacentNum = v[num][i];
-        if (visited[adjacentNum]) {
-            continue;
+        if (!visited[adjacentNum]) {
+            dfs(adjacentNum);
         }
-        if (dfs(adjacentNum)) {
-            return true;
-        };
     }
     visited[num] = false;
     depth--;
-    return false;
 }
 
 int main() {
@@ -53,7 +53,8 @@ int main() {
     }
 
     for (int i = 0; i < n; i++) {
-        if (dfs(i)) {
+        dfs(i);
+        if (found) {
             cout << 1;
             return 0;
         }
