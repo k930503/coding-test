@@ -2,82 +2,69 @@
 #include <vector>
 #include <algorithm>
 #include <queue>
-
 using namespace std;
 
-vector<vector<int>> adjacentList;
-vector<bool> visited;
+static vector < vector <int> > A;
+static vector<bool> visited;
+static bool arrive;
+void DFS(int node);
+void BFS(int node);
 
-void dfs(int num) {
-    cout << num << ' ';
-    visited[num] = true;
-    for (int next : adjacentList[num]) {
-        if (!visited[next]) {
-            dfs(next);
+int main()
+{
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int N, M, Start;
+    arrive = false;
+    cin >> N >> M >> Start;
+    A.resize(N+1);
+
+    for (int i = 0; i < M; i++) {
+        int s, e;
+        cin >> s >> e;
+        A[s].push_back(e);
+        A[e].push_back(s);
+    }
+
+    // �湮�� �� �ִ� ��尡 ���� ���� ��쿡�� ��ȣ�� ���� ���� ���� �湮 �ϱ� ���� ����
+    for (int i = 1; i <= N; i++) {
+        sort(A[i].begin(), A[i].end());
+    }
+
+    visited = vector<bool>(N+1, false); 
+    DFS(Start);
+    cout << "\n";
+    fill(visited.begin(), visited.end(), false); // �湮 �迭 �ʱ�ȭ
+    BFS(Start);
+    cout << "\n";
+}
+
+void DFS(int node) {  // DFS����
+    cout << node << " ";
+    visited[node] = true;
+    for (int i : A[node]) {
+        if (!visited[i]) {
+            DFS(i);
         }
     }
 }
 
-void bfs(int num) {
-    fill(visited.begin(), visited.end(), false);
-
+void BFS(int node) {  // BFS����
     queue<int> myqueue;
-    myqueue.push(num);
-
-    visited[num] = true;
+    myqueue.push(node);
+    visited[node] = true;
 
     while (!myqueue.empty()) {
-        int cur = myqueue.front();
+        int now_node = myqueue.front();
         myqueue.pop();
-        cout << cur << ' ';
-        for (int next : adjacentList[cur]) {
-            if (!visited[next]) {
-                myqueue.push(next);
-                visited[next] = true;
+        cout << now_node << " ";
+        for (int i : A[now_node]) {
+            if (!visited[i]) {
+                visited[i] = true;
+                myqueue.push(i);
             }
         }
     }
-}
-void insert(int at, int num) {
-    auto it = adjacentList[at].begin();
-    if (!adjacentList[at].empty()) {
-        int index = -1;
-        for (int j = 0; j < adjacentList[at].size(); j++) {
-            if (adjacentList[at][j] > num) {
-                index = j;
-                break;
-            }
-        }
-        if (index > -1) {
-            adjacentList[at].insert(it + index, num);
-        } else {
-            adjacentList[at].push_back(num);
-        }
-    } else {
-        adjacentList[at].push_back(num);
-    }
-}
-
-int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-
-    int n, m, v;
-    cin >> n >> m >> v;
-
-    adjacentList.assign(n + 1, vector<int>(0, 0));
-    visited.assign(n + 1, false);
-
-    for (int i = 0; i < m; i++) {
-        int v1, v2;
-        cin >> v1 >> v2;
-
-        insert(v1, v2);
-        insert(v2, v1);
-    }
-    dfs(v);
-    cout << '\n';
-    bfs(v);
-    return 0;
 }
