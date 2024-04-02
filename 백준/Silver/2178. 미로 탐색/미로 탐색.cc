@@ -11,28 +11,19 @@ int n, m;
 void bfs(pair<int, int> p) {
     pair<int, int> curNode = p;
 
+    int dx[] = {0, 1, 0, -1};
+    int dy[] = {1, 0, -1, 0};
+
     while (!(curNode.first == n && curNode.second == m)) {
         int curNodeVal = v[curNode.first][curNode.second];
-        int* top = &v[curNode.first - 1][curNode.second];
-        int* bottom = &v[curNode.first + 1][curNode.second];
-        int* left = &v[curNode.first][curNode.second - 1];
-        int* right = &v[curNode.first][curNode.second + 1];
-
-        if (*top == 1) {
-            *top += curNodeVal;
-            myqueue.emplace(curNode.first - 1, curNode.second);
-        }
-        if (*bottom == 1) {
-            *bottom += curNodeVal;
-            myqueue.emplace(curNode.first + 1, curNode.second);
-        }
-        if (*left == 1) {
-            *left += curNodeVal;
-            myqueue.emplace(curNode.first, curNode.second - 1);
-        }
-        if (*right == 1) {
-            *right += curNodeVal;
-            myqueue.emplace(curNode.first, curNode.second + 1);
+        for (int i = 0; i < 4; i++) {
+            int nextX = curNode.first + dx[i];
+            int nextY = curNode.second + dy[i];
+            int* nextNode = &v[nextX][nextY];
+            if (*nextNode == 1) {
+                *nextNode += curNodeVal;
+                myqueue.emplace(nextX, nextY);
+            }
         }
         curNode = myqueue.front();
         myqueue.pop();
