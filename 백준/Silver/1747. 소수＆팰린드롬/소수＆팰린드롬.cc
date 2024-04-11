@@ -30,7 +30,7 @@ int main() {
     int n;
     cin >> n;
 
-    while (!isPrime(n) || !isPalindrom(n)) {
+    while (!isPalindrom(n) || !isPrime(n)) {
         n++;
     }
     cout << n;
