@@ -17,7 +17,7 @@ bool bellmanFord(int start) {
             int dst = get<1>(edgeList[j]);
             int weight = get<2>(edgeList[j]);
             long long distance = minDistance[src] + weight;
-            if (minDistance[src] != LONG_MAX && minDistance[dst] > distance) {
+            if (minDistance[src] != INT_MAX && minDistance[dst] > distance) {
                 if (i == n - 1) {
                     return false;
                 }
@@ -33,7 +33,7 @@ int main() {
 
     cin >> n >> m;
     edgeList.resize(m);
-    minDistance.assign(n + 1, LONG_MAX);
+    minDistance.assign(n + 1, INT_MAX);
     for (int i = 0; i < m; i++) {
         int a, b, c;
         cin >> a >> b >> c;
@@ -47,7 +47,7 @@ int main() {
 
 
     for (int i = 2; i <= n; i++) {
-        if (minDistance[i] == LONG_MAX) {
+        if (minDistance[i] == INT_MAX) {
             cout << -1 << '\n';
         } else {
             cout << minDistance[i] << '\n';
