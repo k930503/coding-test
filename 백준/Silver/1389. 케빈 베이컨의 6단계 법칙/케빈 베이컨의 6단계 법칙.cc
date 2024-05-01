@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <climits>
-#define INF 99
+#define INF 98
 using namespace std;
 
 vector<vector<int>> adjacencyMatrix;
