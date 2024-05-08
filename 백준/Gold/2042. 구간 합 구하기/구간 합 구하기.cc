@@ -5,7 +5,7 @@ using namespace std;
 vector<long long> tree;
 
 long long getTreeSize(long long n) {
-    long long ret = 2;
+    long long ret = 1;
     while (ret < n) {
         ret *= 2;
     }
