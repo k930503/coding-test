@@ -18,13 +18,13 @@ void bfs(int start) {
     while (!q.empty()) {
         int cur = q.front();
         q.pop();
+        depth[cur] = level;
         count++;
         for (int next : tree[cur]) {
             if (!visited[next]) {
                 visited[next] = true;
                 q.push(next);
                 parent[next] = cur;
-                depth[next] = level;
             }
         }
         if (count == curDepthSize) {
