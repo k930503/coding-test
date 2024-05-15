@@ -35,7 +35,6 @@ using namespace std;
 
 static int M, K, T;
 static int D[51];
-double probability[51];
 static double ans = 0.0;
 
 int main() {
@@ -49,13 +48,13 @@ int main() {
     cin >> K;
 
     for (int i = 0; i < M; i++) {
+        double probability = 1.0;
         if (D[i] >= K) {
-            probability[i] = 1.0;
             for (int k = 0; k < K; k++) {
-                probability[i] *= (double)(D[i] - k) / (T - k);
+                probability *= (double)(D[i] - k) / (T - k);
             }
+            ans += probability;
         }
-        ans += probability[i];
     }
     cout << fixed;
     cout.precision(9);
