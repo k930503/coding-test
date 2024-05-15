@@ -35,7 +35,7 @@ using namespace std;
 
 static int M, K, T;
 static int D[51];
-static double probability[51];
+double probability[51];
 static double ans = 0.0;
 
 int main() {
