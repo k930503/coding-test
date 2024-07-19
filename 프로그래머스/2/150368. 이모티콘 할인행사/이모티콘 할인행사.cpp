@@ -6,49 +6,43 @@ using namespace std;
 
 int maxSubscribers = 0;
 int maxSales = 0;
+vector<int> discounts = {10, 20, 30, 40};
 
-void backtrack(vector<vector<int>>& users, vector<int>& emoticons, vector<int>& discounts, vector<int>& currentDiscounts, int index) {
+void backtrack(vector<vector<int>>& users, vector<int>& emoticons, vector<int>& currentDiscounts, int index) {
     if (index == emoticons.size()) {
-        int totalSales = 0;
-        int subscribers = 0;
-
-        for (auto& user : users) {
-            int minDiscount = user[0];
-            int minPrice = user[1];
-            int purchaseAmount = 0;
-
-            for (int i = 0; i < emoticons.size(); ++i) {
-                if (currentDiscounts[i] >= minDiscount) {
-                    purchaseAmount += emoticons[i] * (100 - currentDiscounts[i]) / 100;
+        int joinCount = 0;
+        int saleAmount = 0;
+        for (auto& user: users) {
+            int amount = 0;
+            for (int i = 0; i < currentDiscounts.size(); i++) {
+                if (user[0] <= currentDiscounts[i]) {
+                    amount += emoticons[i] - (emoticons[i] / 100 * currentDiscounts[i]);
                 }
             }
-
-            if (purchaseAmount >= minPrice) {
-                subscribers += 1;
+            if (amount >= user[1]) {
+                joinCount++;
             } else {
-                totalSales += purchaseAmount;
+                saleAmount += amount;
             }
         }
-
-        if (subscribers > maxSubscribers || (subscribers == maxSubscribers && totalSales > maxSales)) {
-            maxSubscribers = subscribers;
-            maxSales = totalSales;
+        if (maxSubscribers < joinCount) {
+            maxSubscribers = joinCount;
+            maxSales = saleAmount;
+        } else if (maxSubscribers == joinCount) {
+            maxSales = max(maxSales, saleAmount);
         }
-
         return;
     }
-
-    for (int discount : discounts) {
-        currentDiscounts[index] = discount;
-        backtrack(users, emoticons, discounts, currentDiscounts, index + 1);
+    for (int i = 0; i < discounts.size(); i++) {
+        currentDiscounts[index] = discounts[i];
+        backtrack(users, emoticons, currentDiscounts, index + 1);
     }
 }
 
 vector<int> solution(vector<vector<int>> users, vector<int> emoticons) {
-    vector<int> discounts = {10, 20, 30, 40};
     vector<int> currentDiscounts(emoticons.size(), 0);
 
-    backtrack(users, emoticons, discounts, currentDiscounts, 0);
+    backtrack(users, emoticons, currentDiscounts, 0);
 
     return {maxSubscribers, maxSales};
 }
