@@ -16,26 +16,13 @@ int findMaxDivisor(vector<int>& arrayA, vector<int>& arrayB) {
     for (int i = 1; i < arrayA.size(); i++) {
         gcdVal = gcd(gcdVal, arrayA[i]);
     }
-    vector<int> divisors;
-    for (int i = 1; i <= gcdVal; i++) {
-        if (gcdVal % i == 0) {
-            divisors.push_back(i);
-        }
-    }
     
-    for (int i = divisors.size() - 1; i >= 0; i--) {
-        bool founded = true;
-        for (int j = 0; j < arrayB.size(); j++) {
-            if (arrayB[j] % divisors[i] == 0) {
-                founded = false;
-                break;
-            }
-        }
-        if (founded) {
-            return divisors[i];
+    for (int i = 0; i < arrayB.size(); i++) {
+        if (arrayB[i] % gcdVal == 0) {
+            return 0;
         }
     }
-    return answer;
+    return gcdVal;
 }
 
 int solution(vector<int> arrayA, vector<int> arrayB) {
