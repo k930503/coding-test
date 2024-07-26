@@ -4,16 +4,10 @@ using namespace std;
 
 int gcd(int a, int b) {
     int temp;
-    if (a < b) {
-        temp = a;
-        a = b;
-        b = temp;
+    if (b == 0) {
+        return a;
     }
-    int mod = a % b;
-    if (mod == 0) {
-        return b;
-    }
-    return gcd(b, mod);
+    return gcd(b, a % b);
 }
 
 int findMaxDivisor(vector<int>& arrayA, vector<int>& arrayB) {
