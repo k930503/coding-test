@@ -15,7 +15,7 @@ int solution(vector<int> queue1, vector<int> queue2) {
         return answer;
     }
     long long target = sum / 2;
-    while (start <= end || end < v.size()) {
+    while (end < v.size()) {
         if (sumQueue1 == target) {
             return start + (end - (queue1.size() - 1));
         }
