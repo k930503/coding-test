@@ -4,26 +4,21 @@
 using namespace std;
 
 int maxRound = 0;
+vector<bool> visited;
 
-void backtrack(int depth, int current, int k, vector<vector<int>>& dungeons, vector<bool> visited) {
-    visited[current] = true;
-    if (k < dungeons[current][0]) {
-        maxRound = max(maxRound, depth);
-        return;
-    }
+void dfs(int depth, int k, vector<vector<int>>& dungeons) {
     for (int i = 0; i < dungeons.size(); i++) {
-        if (!visited[i]) {
-            backtrack(depth + 1, i, k - dungeons[current][1], dungeons, visited);
+        if (!visited[i] && k >= dungeons[i][0]) {
+            visited[i] = true;
+            dfs(depth + 1, k - dungeons[i][1], dungeons);
+            visited[i] = false;
         }
     }
-    maxRound = max(maxRound, depth + 1);
+    maxRound = max(maxRound, depth);
 }
 
 int solution(int k, vector<vector<int>> dungeons) {
-    for (int i = 0; i < dungeons.size(); i++) {
-        int depth = 0;
-        vector<bool> visited(dungeons.size(), false);
-        backtrack(depth, i, k, dungeons, visited);
-    }
+    visited.assign(dungeons.size(), false);
+    dfs(0, k, dungeons);
     return maxRound;
 }
