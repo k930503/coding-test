@@ -38,15 +38,10 @@ int solution(int n, vector<vector<int>> wires) {
                 adjacentList[wires[j][1]].push_back(wires[j][0]);
             }
         }
+        int first = bfs(i);
+        int second = n - first;
         
-        int temp[2];
-        int index = 0;
-        for (int j = 1; j < n; j++) {
-            if (!visited[j]) {
-                temp[index++] = bfs(j);
-            }
-        }
-        answer = min(answer, abs(temp[0] - temp[1]));
+        answer = min(answer, abs(first - second));
     }
     return answer;
 }
